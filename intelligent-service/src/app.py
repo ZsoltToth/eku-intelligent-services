@@ -1,4 +1,4 @@
-"""Servelts to solve the quadratic equation"""
+"""Servlets to solve the quadratic equation"""
 
 import flask
 from flask import request
@@ -7,6 +7,11 @@ import quadratic_service
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 app.config['JSON_SORT_KEYS'] = False
+
+@app.route('/', methods=['GET'])
+def hello():
+    """Index """
+    return "Hello"
 
 @app.route('/qe/solve', methods=['GET'])
 def quadratic():
@@ -24,10 +29,9 @@ def quadratic():
             return {"message":"At least a parameter is not a number"},406
         if coeff_a == 0:
             return {"message":"It is linear"}, 406
-
     else:
         return {"message":"Missing parameter"}, 406
     return quadratic_service.solve_quadratic(coeff_a, coeff_b, coeff_c), 200
 
-
-app.run()
+if __name__ == '__main__':
+    app.run()

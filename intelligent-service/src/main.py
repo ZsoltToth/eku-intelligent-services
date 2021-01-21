@@ -16,7 +16,6 @@ def print_hi(name):
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print_hi('PyCharm')
-
     values = np.random.randint(0, 90, 10)
     print(values)
     print(values.sum())
