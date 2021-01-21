@@ -1,19 +1,12 @@
 """Servlets to solve the quadratic equation"""
 
-import flask
-from flask import request
+
+from flask import request, Blueprint
 import quadratic_service
 
-app = flask.Flask(__name__)
-app.config["DEBUG"] = True
-app.config['JSON_SORT_KEYS'] = False
+quadratic_api = Blueprint('quadratic_api', __name__)
 
-@app.route('/', methods=['GET'])
-def hello():
-    """Index """
-    return "Hello"
-
-@app.route('/qe/solve', methods=['GET'])
+@quadratic_api.route('/qe/solve', methods=['GET'])
 def quadratic():
     """Returns the solution and the discriminant of the quadratic equation.
      The quadratic equation described by a, b and c parameters"""
@@ -32,6 +25,3 @@ def quadratic():
     else:
         return {"message":"Missing parameter"}, 406
     return quadratic_service.solve_quadratic(coeff_a, coeff_b, coeff_c), 200
-
-if __name__ == '__main__':
-    app.run()

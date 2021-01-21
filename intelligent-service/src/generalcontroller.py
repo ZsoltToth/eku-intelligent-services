@@ -1,0 +1,12 @@
+"""Servlets to general urls"""
+
+
+
+from flask import Blueprint
+
+general_api = Blueprint('general_api', __name__)
+
+@general_api.route('/', methods=['GET'])
+def hello():
+    """Index """
+    return "Hello"
