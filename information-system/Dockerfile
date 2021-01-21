@@ -1,3 +1,4 @@
+ARG APP_PORT=3000
 FROM node:latest
 
 WORKDIR /home/node/app
@@ -5,7 +6,7 @@ WORKDIR /home/node/app
 COPY package.json .
 COPY src ./src
 
-EXPOSE 3000
+EXPOSE ${APP_PORT}
 
 RUN npm install
 CMD npm run start

@@ -1,7 +1,5 @@
 const environment = ['dev', 'test', 'prod'].includes(process.env.NODE_ENV) ? process.env.NODE_ENV : 'dev';
 
-const environment_constants = [ 'DB_HOST', 'DB_PORT', 'DB_NAME', 'DB_USER', 'DB_PASSWORD', 'APP_PORT']
-
 const dev = {
   env: 'development',
   app: {
