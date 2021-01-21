@@ -1,0 +1,30 @@
+@startuml
+
+actor User as User
+participant "Information System" as InfoSys
+participant "Artificial Intelligence" as AI
+database DB as DB
+
+
+== Task Initialization ==
+User -> InfoSys : HTTP Request /start
+InfoSys -> DB : insert
+InfoSys -> AI : HTTP Request
+AI --> InfoSys : HTTP Response
+InfoSys --> User : HTTP Response
+
+== Processing & Postback ==
+AI -> AI : Time Consuming Process
+
+AI -> InfoSys : HTTP Request /notify
+InfoSys -> DB  : update
+InfoSys --> AI : HTTP Response
+
+== Client Polling ==
+
+User -> InfoSys : HTTP Request /query
+InfoSys -> DB : select
+DB --> InfoSys
+InfoSys --> User : HTTP Response
+
+@enduml

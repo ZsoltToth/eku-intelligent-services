@@ -1,0 +1,23 @@
+@startuml
+
+node "Information System" {
+interface "HTTPS\nInternet" as Web
+interface HTTP as is_http
+[Information System] as IS
+database DB as DB
+
+IS -left- Web
+IS -- DB
+IS -right- is_http
+}
+
+node "Artificail Intelligence" {
+interface HTTP as ai_http
+[Intelligent Service] as service
+
+ai_http -down- service
+}
+
+is_http -right- ai_http
+
+@enduml
