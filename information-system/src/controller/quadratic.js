@@ -26,6 +26,10 @@ exports.solveSync = (req, res) => {
     res.status(400).send();
     return;
   }
-  service.solveSync(req.query.a, req.query.b, req.query.c).then((solution) => res.status(200).send(solution))
-    .then((err) => logger.error(err));
+  service.solveSync(req.query.a, req.query.b, req.query.c)
+    .then((solution) => res.status(200).send(solution))
+    .catch((err) => {
+      logger.error(err);
+      res.status(500).send(err);
+    });
 };

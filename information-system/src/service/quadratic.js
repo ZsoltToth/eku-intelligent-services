@@ -1,4 +1,6 @@
 const winston = require('winston');
+const axios = require('axios');
+const { ai } = require('../config');
 
 const logger = winston.createLogger({
   level: 'info',
@@ -12,21 +14,27 @@ const logger = winston.createLogger({
   ]
 });
 
+const isAiConnnectionConfigured = () => {
+  return ai.host !== null && ai.port > 0;
+};
+
 const solveSync = (a, b, c) => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
+    if (!isAiConnnectionConfigured()) {
+      logger.error({ message: 'AI Connection is not Configured' });
+      reject(new Error({ message: 'AI Connection is not Configured' }));
+      return;
+    }
     logger.info('Solve QE Synchronously');
-    const discriminant = Math.pow(b, 2) - 4 * a * c;
-    if (discriminant < 0) {
-      resolve({ discriminant: discriminant });
-      return;
-    }
-    if (discriminant === 0.0) {
-      resolve({ discriminant: discriminant, solution: [(-1 * b) / (2 * a)] });
-      return;
-    }
-    const x1 = (-1 * b + Math.sqrt(discriminant)) / (2 * a);
-    const x2 = (-1 * b - Math.sqrt(discriminant)) / (2 * a);
-    resolve({ discriminant: discriminant, solution: [x1, x2] });
+    const syncRequestUrl = `${ai.host}:${ai.port}/qe/solve`;
+    axios.get(syncRequestUrl, { params: { a: a, b: b, c: c } })
+      .then((data) => {
+        resolve(data);
+      })
+      .catch(err => {
+        logger.error(err);
+        reject(err);
+      });
   });
 };
 

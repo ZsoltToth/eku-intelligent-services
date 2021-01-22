@@ -11,6 +11,10 @@ const dev = {
     name: 'test',
     user: 'mern',
     password: 'secret'
+  },
+  ai: {
+    host: null,
+    port: -1
   }
 };
 
@@ -25,6 +29,10 @@ const test = {
     name: (process.env.DB_NAME !== undefined ? process.env.DB_NAME : dev.db.name),
     user: (process.env.DB_USER !== undefined ? process.env.DB_USER : dev.db.user),
     password: (process.env.DB_PASSWORD !== undefined ? process.env.DB_PASSWORD : dev.db.password)
+  },
+  ai: {
+    host: (process.env.AI_HOST !== undefined ? process.env.AI_HOST : dev.ai.host),
+    port: (process.env.AI_PORT !== undefined ? process.env.AI_PORT : dev.ai.port)
   }
 };
 const prod = { ...test, env: 'production' };
