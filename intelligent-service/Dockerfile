@@ -9,5 +9,7 @@ COPY Pipfile.lock ./
 RUN pip install pipenv
 RUN pipenv install --deploy --system --ignore-pipfile
 #RUN pipenv shell
+EXPOSE 5000
 
 CMD python ./src/main.py
+
