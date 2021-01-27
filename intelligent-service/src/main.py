@@ -13,18 +13,34 @@ from generalcontroller import general_api
 
 def read_config():
     """Reads the environment variables, and validate them"""
-    arg_port = os.environ.get('PORT')
-    arg_inf_system_host = os.environ.get('IS_HOST')
-    arg_inf_system_port = os.environ.get('IS_PORT')
-    arg_delay = os.environ.get('DELAY')
-    assert arg_port is not None, "Port is missing"
-    assert arg_inf_system_host is not None, "Information system host is missing"
-    assert arg_inf_system_port is not None, "Information system port is missing"
-    assert arg_delay is not None, "Delay is missing"
-    assert arg_port.isdigit(), "Port is not a number"
-    assert arg_inf_system_port.isdigit(), "Information system port is not a number"
-    assert arg_delay.isdigit(), "Delay in not a valid number"
-    return arg_port, arg_inf_system_host, arg_inf_system_port, arg_delay
+    return __get_port(), __get_is_host(), __get_is_port(), __get_delay()
+
+def __get_port():
+    port = os.environ.get('PORT')
+    if (port is None) or (not port.isdigit()):
+        raise OSError('PORT is missing or not a number!')
+    return port
+
+def __get_is_host():
+    is_host = os.environ.get('IS_HOST')
+    if is_host is None:
+        raise OSError('IS_HOST is missing!')
+    return is_host
+
+def __get_is_port():
+    is_port = os.environ.get('IS_PORT')
+    if (is_port is None) or (not is_port.isdigit()):
+        raise OSError('IS_PORT is missing or not a number!')
+    return is_port
+
+def __get_delay():
+    delay = os.environ.get('DELAY')
+    if (delay is None) or (not delay.isdigit()):
+        raise OSError('DELAY is missing or not a number')
+    return delay
+
+
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
