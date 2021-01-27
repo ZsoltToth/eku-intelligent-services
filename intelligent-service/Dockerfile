@@ -1,3 +1,4 @@
+ARG PORT=5000
 FROM python:3.8
 
 WORKDIR /usr/src/app
@@ -9,7 +10,7 @@ COPY Pipfile.lock ./
 RUN pip install pipenv
 RUN pipenv install --deploy --system --ignore-pipfile
 #RUN pipenv shell
-EXPOSE 5000
+EXPOSE ${PORT}
 
 CMD python ./src/main.py
 
