@@ -15,11 +15,13 @@ def read_config():
     """Reads the environment variables, and validate them"""
     return __get_port(), __get_is_host(), __get_is_port(), __get_delay()
 
+
 def __get_port():
     port = os.environ.get('PORT')
     if (port is None) or (not port.isdigit()):
         raise OSError('PORT is missing or not a number!')
     return port
+
 
 def __get_is_host():
     is_host = os.environ.get('IS_HOST')
@@ -27,19 +29,19 @@ def __get_is_host():
         raise OSError('IS_HOST is missing!')
     return is_host
 
+
 def __get_is_port():
     is_port = os.environ.get('IS_PORT')
     if (is_port is None) or (not is_port.isdigit()):
         raise OSError('IS_PORT is missing or not a number!')
     return is_port
 
+
 def __get_delay():
     delay = os.environ.get('DELAY')
     if (delay is None) or (not delay.isdigit()):
         raise OSError('DELAY is missing or not a number')
     return delay
-
-
 
 
 # Press the green button in the gutter to run the script.
