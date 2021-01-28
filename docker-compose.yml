@@ -1,0 +1,45 @@
+version: '3.3'
+services:
+  db:
+    image: 'mongo:4.4'
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mern
+      MONGO_INITDB_ROOT_PASSWORD: secret
+    ports:
+      - '127.0.0.1:27017:27017'
+
+  ai-service:
+    build:
+      context: ./intelligent-service
+      dockerfile: Dockerfile
+      args:
+        PORT: '${AI_PORT}'
+    ports:
+      - '127.0.0.1:${AI_PORT}:${AI_PORT}'
+    environment:
+      PORT: '${AI_PORT}'
+      IS_HOST: info-sys
+      IS_PORT: '${IS_PORT}'
+      DELAY: '${DELAY}'
+
+  info-sys:
+    build:
+      context: ./information-system
+      dockerfile: Dockerfile
+      args:
+        APP_PORT: '${IS_PORT}'
+    ports:
+      - '127.0.0.1:${IS_PORT}:${IS_PORT}'
+    environment:
+      NODE_ENV: test
+      APP_PORT: '${IS_PORT}'
+      DB_HOST: db
+      DB_PORT: 27017
+      DB_NAME: issues
+      DB_USER: mern
+      DB_PASSWORD: secret
+      AI_HOST: ai-service
+      AI_PORT: '${AI_PORT}'
+    depends_on:
+      - db
