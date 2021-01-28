@@ -47,10 +47,10 @@ const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'MERN Template Express API with Swagger',
+      title: 'Intelligent Services - Information System - Swagger',
       version: '0.1.0',
       description:
-                'Lorem ipsum ...',
+                'Information System part of the template project for Intelligent Services Course',
       license: {
         name: 'MIT',
         url: 'https://spdx.org/licenses/MIT.html'
