@@ -29,7 +29,7 @@ const solveSync = (a, b, c) => {
     const syncRequestUrl = `http://${ai.host}:${ai.port}/qe/solve`;
     axios.get(syncRequestUrl, { params: { a: a, b: b, c: c } })
       .then((resp) => {
-        logger.info({ resp: resp });
+        logger.info({ status: resp.status, statusText: resp.statusText, data: resp.data });
         resolve(resp.data);
       })
       .catch(err => {
