@@ -26,10 +26,11 @@ const solveSync = (a, b, c) => {
       return;
     }
     logger.info('Solve QE Synchronously');
-    const syncRequestUrl = `${ai.host}:${ai.port}/qe/solve`;
+    const syncRequestUrl = `http://${ai.host}:${ai.port}/qe/solve`;
     axios.get(syncRequestUrl, { params: { a: a, b: b, c: c } })
-      .then((data) => {
-        resolve(data);
+      .then((resp) => {
+        logger.info({ status: resp.status, statusText: resp.statusText, data: resp.data });
+        resolve(resp.data);
       })
       .catch(err => {
         logger.error(err);
