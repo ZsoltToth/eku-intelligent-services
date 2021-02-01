@@ -13,8 +13,8 @@ const dev = {
     password: 'secret'
   },
   ai: {
-    host: null,
-    port: -1
+    host: (process.env.AI_HOST !== undefined ? process.env.AI_HOST : null),
+    port: (process.env.AI_PORT !== undefined ? process.env.AI_PORT : -1)
   }
 };
 

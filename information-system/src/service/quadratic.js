@@ -1,6 +1,9 @@
 const winston = require('winston');
 const axios = require('axios');
 const { ai } = require('../config');
+const Task = require('../model/Task');
+const TaskTypes = require('../model/taskTypes');
+const TaskStates = require('../model/taskStates');
 
 const logger = winston.createLogger({
   level: 'info',
@@ -30,10 +33,31 @@ const solveSync = (a, b, c) => {
     axios.get(syncRequestUrl, { params: { a: a, b: b, c: c } })
       .then((resp) => {
         logger.info({ status: resp.status, statusText: resp.statusText, data: resp.data });
+        Task.create({
+          type: TaskTypes.SYNC,
+          status: TaskStates.COMPLETED,
+          coeffs: [a, b, c],
+          solution: {
+            discriminant: resp.data.discriminant,
+            roots: resp.data.solution
+          }
+        });
         resolve(resp.data);
       })
       .catch(err => {
-        logger.error(err);
+        logger.error({ message: err, type: 'Communication Error!' });
+        Task.create({
+          type: TaskTypes.SYNC,
+          status: TaskStates.FAILED,
+          coeffs: [a, b, c],
+          errorMessage: err.toString()
+        })
+          .then((doc) => {
+            logger.info(doc);
+          })
+          .catch(error => {
+            logger.error({ error: 'Database Error!', message: error });
+          });
         reject(err);
       });
   });
