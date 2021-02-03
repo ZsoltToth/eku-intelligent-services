@@ -36,7 +36,7 @@ services:
       APP_PORT: '${IS_PORT}'
       DB_HOST: db
       DB_PORT: 27017
-      DB_NAME: issues
+      DB_NAME: tasks
       DB_USER: mern
       DB_PASSWORD: secret
       AI_HOST: ai-service

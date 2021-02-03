@@ -21,7 +21,7 @@ services:
       APP_PORT: 3000
       DB_HOST: db
       DB_PORT: 27017
-      DB_NAME: issues
+      DB_NAME: test
       DB_USER: mern
       DB_PASSWORD: secret
     depends_on:
