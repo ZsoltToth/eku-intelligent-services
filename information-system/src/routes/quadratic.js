@@ -42,7 +42,8 @@ router.get('/sync/solve', controller.solveSync);
  *          name: id
  *          type: string
  *          required: true
- *          description: task identifier
+ *          description: task identifier, ObjectID
+ *          example: 507f1f77bcf86cd799439011
  *      requestBody:
  *        description: solution
  *        content:

@@ -36,11 +36,16 @@ exports.solveSync = (req, res) => {
 };
 
 exports.asyncNotification = (req, res) => {
-  // logger.info({ request: req });
   if (!validationResult(req).isEmpty()) {
     logger.error({ validationErrors: validationResult(req) });
     res.status(400).send(validationResult(req));
     return;
   }
-  res.status(200).send();
+  service.handleAsyncNotification(req.params.id, req.body)
+    .then(() => {
+      res.status(200).send();
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
 };
