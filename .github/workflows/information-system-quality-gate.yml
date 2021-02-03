@@ -1,4 +1,4 @@
-name: Backend Quality Gate
+name: Information System Quality Gate
 
 on:
   push:
