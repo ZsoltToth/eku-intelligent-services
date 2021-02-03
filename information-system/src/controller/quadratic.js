@@ -1,3 +1,4 @@
+const { validationResult } = require('express-validator');
 const service = require('../service/quadratic');
 const winston = require('winston');
 
@@ -32,4 +33,14 @@ exports.solveSync = (req, res) => {
       logger.error(err);
       res.status(500).send(err);
     });
+};
+
+exports.asyncNotification = (req, res) => {
+  // logger.info({ request: req });
+  if (!validationResult(req).isEmpty()) {
+    logger.error({ validationErrors: validationResult(req) });
+    res.status(400).send(validationResult(req));
+    return;
+  }
+  res.status(200).send();
 };
