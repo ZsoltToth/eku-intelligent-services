@@ -30,9 +30,19 @@ const solveSync = (a, b, c) => {
     }
     logger.info('Solve QE Synchronously');
     const syncRequestUrl = `http://${ai.host}:${ai.port}/qe/solve`;
-    axios.get(syncRequestUrl, { params: { a: a, b: b, c: c } })
+    axios.get(syncRequestUrl, {
+      params: {
+        a: a,
+        b: b,
+        c: c
+      }
+    })
       .then((resp) => {
-        logger.info({ status: resp.status, statusText: resp.statusText, data: resp.data });
+        logger.info({
+          status: resp.status,
+          statusText: resp.statusText,
+          data: resp.data
+        });
         Task.create({
           type: TaskTypes.SYNC,
           status: TaskStates.COMPLETED,
@@ -45,7 +55,10 @@ const solveSync = (a, b, c) => {
         resolve(resp.data);
       })
       .catch(err => {
-        logger.error({ message: err, type: 'Communication Error!' });
+        logger.error({
+          message: err,
+          type: 'Communication Error!'
+        });
         Task.create({
           type: TaskTypes.SYNC,
           status: TaskStates.FAILED,
@@ -56,13 +69,55 @@ const solveSync = (a, b, c) => {
             logger.info(doc);
           })
           .catch(error => {
-            logger.error({ error: 'Database Error!', message: error });
+            logger.error({
+              error: 'Database Error!',
+              message: error
+            });
           });
         reject(err);
       });
   });
 };
 
+const isTaskAsyncAndInProgress = (task) => {
+  if (task === null) {
+    return false;
+  }
+  if (task.type !== TaskTypes.ASYNC) {
+    return false;
+  }
+  if (task.status !== TaskStates.IN_PROGRESS) {
+    return false;
+  }
+  return true;
+};
+
+const handleAsyncNotification = async (taskId, solution) => {
+  console.log({
+    taskId: taskId,
+    solution: solution
+  });
+  try {
+    const task = await Task.findById(taskId).exec();
+    console.log({ task: task });
+    if (!isTaskAsyncAndInProgress(task)) {
+      throw new Error(`Task (${taskId}) is invalid state: ${task.type} ${task.status}`);
+    }
+    return await Task.findByIdAndUpdate({ _id: taskId }, {
+      status: TaskStates.COMPLETED,
+      solution: {
+        discriminant: solution.discriminant,
+        roots: solution.solution
+      },
+      lastUpdate: Date.now()
+    });
+  } catch (err) {
+    console.log({ error: err });
+    return err;
+  }
+};
+
 module.exports = {
-  solveSync: solveSync
+  solveSync: solveSync,
+  handleAsyncNotification: handleAsyncNotification
 };
