@@ -17,13 +17,13 @@ const logger = winston.createLogger({
   ]
 });
 
-const isAiConnnectionConfigured = () => {
+const isAiConnectionConfigured = () => {
   return ai.host !== null && ai.port > 0;
 };
 
 const solveSync = (a, b, c) => {
   return new Promise((resolve, reject) => {
-    if (!isAiConnnectionConfigured()) {
+    if (!isAiConnectionConfigured()) {
       logger.error({ message: 'AI Connection is not Configured' });
       reject(new Error({ message: 'AI Connection is not Configured' }));
       return;
