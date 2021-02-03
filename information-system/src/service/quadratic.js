@@ -79,6 +79,10 @@ const solveSync = (a, b, c) => {
   });
 };
 
+const isTaskAsyncAndInProgress = (task) => {
+  return (task === null && task.type !== TaskTypes.ASYNC && task.status !== TaskStates.IN_PROGRESS);
+};
+
 const handleAsyncNotification = async (taskId, solution) => {
   console.log({
     taskId: taskId,
@@ -87,9 +91,17 @@ const handleAsyncNotification = async (taskId, solution) => {
   try {
     const task = await Task.findById(taskId).exec();
     console.log({ task: task });
-    if (task === null || task.type !== TaskTypes.ASYNC || task.status !== TaskStates.IN_PROGRESS) {
+    if (isTaskAsyncAndInProgress(task)) {
       throw new Error(`Task (${taskId}) is invalid state: ${task.type} ${task.status}`);
     }
+    return await Task.findByIdAndUpdate({ _id: taskId }, {
+      status: TaskStates.COMPLETED,
+      solution: {
+        discriminant: solution.discriminant,
+        roots: solution.solution
+      },
+      lastUpdate: Date.now()
+    });
   } catch (err) {
     console.log({ error: err });
     return err;
