@@ -63,7 +63,114 @@ describe('Test Quadratic Equation Solver Services', () => {
 
     it('perform calculation with communication error', async () => {
       // TODO: #17
-    }
-    );
+    });
+
+    it('notifies an async task successfully', async () => {
+      // given
+      jest.mock('../model/Task');
+      const Task = require('../model/Task');
+      const taskInprogress = {
+        _id: '601aed3d6acb4f2aaa6e6610',
+        status: taskStates.IN_PROGRESS,
+        type: taskTypes.ASYNC
+      };
+      const updatedTask = {
+        ...taskInprogress,
+        status: taskStates.COMPLETED
+      };
+      Task.findById.mockImplementation(() => {
+        return {
+          exec: jest.fn(() => {
+            return taskInprogress;
+          })
+        };
+      });
+      Task.findByIdAndUpdate.mockReturnValue(updatedTask);
+
+      const service = require('./quadratic');
+      // when
+
+      await service.handleAsyncNotification(taskInprogress._id, {});
+      // then
+
+      expect(Task.findById).toHaveBeenCalled();
+      expect(Task.findByIdAndUpdate).toHaveBeenCalled();
+    });
+
+    it('notifies an async task successfully which is not in progress state', async () => {
+      // given
+      jest.mock('../model/Task');
+      const Task = require('../model/Task');
+      const taskInprogress = {
+        _id: '601aed3d6acb4f2aaa6e6610',
+        status: taskStates.COMPLETED,
+        type: taskTypes.ASYNC
+      };
+      Task.findById.mockImplementation(() => {
+        return {
+          exec: jest.fn(() => {
+            return taskInprogress;
+          })
+        };
+      });
+      const service = require('./quadratic');
+      // when
+      try {
+        await service.handleAsyncNotification(taskInprogress._id, {});
+      } catch (err) {
+        expect(err).not.toBeNull();
+      }
+      // then
+      expect(Task.findById).toHaveBeenCalled();
+    });
+
+    it('notifies an async task successfully which is not async', async () => {
+      // given
+      jest.mock('../model/Task');
+      const Task = require('../model/Task');
+      const taskInprogress = {
+        _id: '601aed3d6acb4f2aaa6e6610',
+        status: taskStates.IN_PROGRESS,
+        type: taskTypes.SYNC
+      };
+      Task.findById.mockImplementation(() => {
+        return {
+          exec: jest.fn(() => {
+            return taskInprogress;
+          })
+        };
+      });
+      const service = require('./quadratic');
+      // when
+      try {
+        await service.handleAsyncNotification(taskInprogress._id, {});
+      } catch (err) {
+        expect(err).not.toBeNull();
+      }
+      // then
+      expect(Task.findById).toHaveBeenCalled();
+    });
+
+    it('notifies an async task successfully which is not fount', async () => {
+      // given
+      jest.mock('../model/Task');
+      const Task = require('../model/Task');
+      Task.findById.mockImplementation(() => {
+        return {
+          exec: jest.fn(() => {
+            return null;
+          })
+        };
+      });
+      const service = require('./quadratic');
+      // when
+      try {
+        await service.handleAsyncNotification('id', {});
+      } catch (err) {
+        expect(err).not.toBeNull();
+      }
+      // then
+      expect(Task.findById).toHaveBeenCalled();
+    });
   });
 });
