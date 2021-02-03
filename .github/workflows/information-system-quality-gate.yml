@@ -16,6 +16,6 @@ jobs:
       with:
         node-version: 12
     - name: Install
-      run: npm install --prefix ./backend
+      run: npm install --prefix ./information-system
     - name: Quality Gate
       run: npm run test:quality --prefix ./information-system
