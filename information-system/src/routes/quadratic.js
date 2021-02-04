@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const solutionNotificationDto = require('./dto/solutionNotificationDto');
+const asyncQuadraticEquationRequestDto = require('./dto/asyncQuadraticEquationRequestDto');
 const controller = require('../controller/quadratic');
 
 /**
@@ -36,7 +37,7 @@ router.get('/sync/solve', controller.solveSync);
  * @swagger
  * /qe/async/notify/{id}:
  *  post:
- *      summary: Solve a Quadratic Equation Synchronously
+ *      summary: Notify the system about the soulution of a QE Task
  *      parameters:
  *        - in: path
  *          name: id
@@ -62,4 +63,34 @@ router.get('/sync/solve', controller.solveSync);
  *              description: Successful recording of notification
  */
 router.post('/async/notify/:id', solutionNotificationDto, controller.asyncNotification);
+
+/**
+ * @swagger
+ * /qe/async/solve:
+ *  post:
+ *      summary: Solve a Quadratic Equation Asynchronously
+ *      requestBody:
+ *        description: coefficients
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                a:
+ *                  type: number
+ *                b:
+ *                  type: number
+ *                c:
+ *                  type: number
+ *      responses:
+ *          200:
+ *              description: Successful recording of notification
+ *              content:
+ *                text/plain:
+ *                  schema:
+ *                    type: ObjectID | String
+ *                    example: 507f1f77bcf86cd799439011
+ */
+router.post('/async/solve', asyncQuadraticEquationRequestDto, controller.solveAsync);
+
 module.exports = router;

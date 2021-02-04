@@ -117,7 +117,58 @@ const handleAsyncNotification = async (taskId, solution) => {
   }
 };
 
+const _initializeAsyncTask = async (a, b, c) => {
+  try {
+    const task = await Task.create({
+      type: TaskTypes.ASYNC,
+      status: TaskStates.INITIALIZED,
+      coeffs: [a, b, c]
+    });
+    return task._id;
+  } catch (err) {
+    logger.error(err);
+  }
+};
+
+const _failTask = async (taskId, reason) => {
+  await Task.findByIdAndUpdate({ _id: taskId }, {
+    status: TaskStates.FAILED,
+    lastUpdate: Date.now(),
+    errorMessage: reason
+  });
+};
+
+const _startAsyncServiceOnIntelligenceServer = async (taskId, coeffs) => {
+  if (!isAiConnectionConfigured()) {
+    logger.error({ message: 'AI Connection is not Configured' });
+    throw Error('AI Connection is not Configured');
+  }
+  logger.info('Start Async QE Solver on Artificial Intelligence Service');
+  const asyncRequestUrl = `http://${ai.host}:${ai.port}/qe/async/solve`;
+  await axios.post(asyncRequestUrl, {
+    taskId: taskId,
+    payload: coeffs
+  });
+};
+
+const solveAsync = async ({
+  a,
+  b,
+  c
+}) => {
+  const taskId = await _initializeAsyncTask(a, b, c);
+  try {
+    await _startAsyncServiceOnIntelligenceServer(taskId, [a, b, c]);
+  } catch (err) {
+    logger.error(err);
+    _failTask(taskId, err);
+    throw Error(`Task Initialization Failed ${taskId}`);
+  }
+  return taskId;
+};
+
 module.exports = {
   solveSync: solveSync,
-  handleAsyncNotification: handleAsyncNotification
+  handleAsyncNotification: handleAsyncNotification,
+  solveAsync: solveAsync
 };
