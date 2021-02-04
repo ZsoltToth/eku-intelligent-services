@@ -49,3 +49,18 @@ exports.asyncNotification = (req, res) => {
       res.status(500).send(err);
     });
 };
+
+exports.solveAsync = (req, res) => {
+  if (!validationResult(req).isEmpty()) {
+    logger.error({ validationErrors: validationResult(req) });
+    res.status(400).send(validationResult(req));
+    return;
+  }
+  service.solveAsync(req.body)
+    .then((taskId) => {
+      res.status(200).send(taskId);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
+};
