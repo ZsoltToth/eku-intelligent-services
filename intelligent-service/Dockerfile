@@ -5,10 +5,9 @@ WORKDIR /usr/src/app
 
 COPY src ./src
 COPY Pipfile ./
-COPY Pipfile.lock ./
 
 RUN pip install pipenv
-RUN pipenv install --deploy --system --ignore-pipfile
+RUN pipenv install --deploy --system --skip-lock
 #RUN pipenv shell
 EXPOSE ${PORT}
 
