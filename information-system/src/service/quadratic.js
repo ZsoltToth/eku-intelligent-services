@@ -121,7 +121,7 @@ const _initializeAsyncTask = async (a, b, c) => {
   try {
     const task = await Task.create({
       type: TaskTypes.ASYNC,
-      status: TaskStates.INITIALIZED, // TODO: #22
+      status: TaskStates.IN_PROGRESS, // TODO: #22
       coeffs: [a, b, c]
     });
     return task._id;
