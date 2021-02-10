@@ -1,11 +1,10 @@
 """Servlets to solve the quadratic equation"""
 
-from threading import Thread
-import time
+
 from flask import request, Blueprint
-import requests
+
 import quadratic_service
-import config
+
 
 quadratic_api = Blueprint('quadratic_api', __name__)
 
@@ -34,41 +33,35 @@ def quadratic():
 @quadratic_api.route('/qe/async/solve', methods=['POST'])
 def async_quadratic():
     """Returns the acceptance of the async quadratic equation solver task"""
-    if not request.is_json:
-        return {"message": "Wrong format"}, 406
-    content = request.get_json()
-    print(content)
-    if len(content.get("payload")) == 3:
-        arg_a = content.get("payload")[0]
-        arg_b = content.get("payload")[1]
-        arg_c = content.get("payload")[2]
-        try:
-            coeff_a = float(arg_a)
-            coeff_b = float(arg_b)
-            coeff_c = float(arg_c)
-        except ValueError:
-            return {"message": "At least a payload element is not a number"}, 406
-        if coeff_a == 0:
-            return {"message": "It is linear"}, 406
-    else:
-        return {"message": "Wrong number of parameters"}, 406
-    if "taskId" not in content:
-        return {"message": "Missing taskId"}, 406
-    task_id = content.get("taskId")
-    thread = Thread(target=notify_result, args=(task_id, coeff_a, coeff_b, coeff_c))
-    thread.daemon = True
-    thread.start()
+    try:
+        task_id, [coeff_a, coeff_b, coeff_c] = _parse_async_task_request_dto(request)
+    except ValueError as exception:
+        return {"message": str(exception)}, 406
+    quadratic_service.solve_quadratic_async(task_id, coeff_a, coeff_b, coeff_c)
     return {"message": "OK"}, 200
 
 
-def notify_result(task_id, coeff_a, coeff_b, coeff_c):
-    """Notify the information system about the solved quadratic equation."""
-    payload = quadratic_service.solve_quadratic(coeff_a, coeff_b, coeff_c)
-    delay = int(config.__get_delay())  # pylint: disable=W0212
-    host = config.__get_is_host()  # pylint: disable=W0212
-    port = config.__get_is_port()  # pylint: disable=W0212
-    for i in range(delay):
-        print("Working... {}/{}".format(i + 1, delay))
-        time.sleep(1)
-    requests.post('http://' + host + ":" + port + "/qe/async/notify/" + task_id, json=payload)
-    print("Thread Finished :")
+
+def _parse_async_task_request_dto(dto):
+    if not dto.is_json:
+        raise ValueError("Wrong format")
+    content = dto.get_json()
+    if len(content.get("payload")) != 3:
+        raise ValueError("Missing parameter")
+
+    arg_a = content.get("payload")[0]
+    arg_b = content.get("payload")[1]
+    arg_c = content.get("payload")[2]
+
+    try:
+        coeff_a = float(arg_a)
+        coeff_b = float(arg_b)
+        coeff_c = float(arg_c)
+    except ValueError as number_exception:
+        raise ValueError("At least a payload element is not a number") from number_exception
+    if coeff_a == 0:
+        raise ValueError("It is linear")
+    if "taskId" not in content:
+        raise ValueError("Missing taskId")
+    task_id = content.get("taskId")
+    return task_id, [coeff_a, coeff_b, coeff_c]
