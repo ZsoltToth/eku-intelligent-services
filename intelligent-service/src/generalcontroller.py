@@ -8,5 +8,12 @@ general_api = Blueprint('general_api', __name__)
 
 @general_api.route('/', methods=['GET'])
 def hello():
-    """Index """
+    """
+    Hello World
+    ---
+    responses:
+      200:
+        description: Hello World
+    """
     return "Hello"
+

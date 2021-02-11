@@ -5,6 +5,8 @@ verify_ssl = true
 
 [dev-packages]
 pylint = "*"
+flask-swagger = "*"
+flask-swagger-ui = "*"
 
 [packages]
 numpy = "*"
