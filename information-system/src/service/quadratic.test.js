@@ -198,5 +198,39 @@ describe('Test Quadratic Equation Solver Services', () => {
       expect(Task.findByIdAndUpdate.mock.calls[0][1]).toMatchObject({ status: taskStates.IN_PROGRESS });
       expect(axios.post).toBeCalled();
     });
+
+    it('query an existing task by Id', async () => {
+      // given
+      const TASK_ID = '60253725fd0dcdb9ecc2adc4';
+      const TASK = {
+        coeffs: [
+          1,
+          4,
+          4
+        ],
+        _id: '60253725fd0dcdb9ecc2adc4',
+        type: taskTypes.SYNC,
+        status: taskStates.COMPLETED,
+        solution: {
+          roots: [
+            -2
+          ],
+          _id: '60253725fd0dcdb9ecc2adc5',
+          discriminant: 0
+        },
+        lastUpdate: '2021-02-11T13:54:45.105Z',
+        __v: 0
+      };
+      jest.mock('../model/Task');
+      const Task = require('../model/Task');
+      Task.findById.mockReturnValue(TASK);
+      // when
+      const service = require('./quadratic');
+      const QUERIED_TASK = await service.queryTaskById(TASK_ID);
+      // then
+      expect(QUERIED_TASK).toBe(TASK);
+      expect(Task.findById).toBeCalled();
+      expect(Task.findById.mock.calls[0][0]).toBe(TASK_ID);
+    });
   });
 });
