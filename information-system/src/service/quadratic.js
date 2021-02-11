@@ -121,13 +121,20 @@ const _initializeAsyncTask = async (a, b, c) => {
   try {
     const task = await Task.create({
       type: TaskTypes.ASYNC,
-      status: TaskStates.IN_PROGRESS, // TODO: #22
+      status: TaskStates.INITIALIZED,
       coeffs: [a, b, c]
     });
     return task._id;
   } catch (err) {
     logger.error(err);
   }
+};
+
+const _changeTaskToInProgress = async (taskId) => {
+  await Task.findByIdAndUpdate({ _id: taskId }, {
+    status: TaskStates.IN_PROGRESS,
+    lastUpdate: Date.now()
+  });
 };
 
 const _failTask = async (taskId, reason) => {
@@ -159,6 +166,7 @@ const solveAsync = async ({
   const taskId = await _initializeAsyncTask(a, b, c);
   try {
     await _startAsyncServiceOnIntelligenceServer(taskId, [a, b, c]);
+    await _changeTaskToInProgress(taskId);
   } catch (err) {
     logger.error(err);
     _failTask(taskId, err);
