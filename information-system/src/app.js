@@ -32,7 +32,6 @@ mongoose.connect(dbConnectionString, {
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
-const issuesRouter = require('./routes/issues');
 const quadraticRouter = require('./routes/quadratic');
 
 const app = express();
@@ -72,7 +71,6 @@ const swaggerOptions = {
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
 
-app.use('/issues', issuesRouter);
 app.use('/qe', quadraticRouter);
 
 module.exports = app;
