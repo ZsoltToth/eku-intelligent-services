@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const solutionNotificationDto = require('./dto/solutionNotificationDto');
 const asyncQuadraticEquationRequestDto = require('./dto/asyncQuadraticEquationRequestDto');
+const taskQueryRequestDto = require('./dto/taskQueryRequestDto');
 const controller = require('../controller/quadratic');
 
 /**
@@ -92,5 +93,23 @@ router.post('/async/notify/:id', solutionNotificationDto, controller.asyncNotifi
  *                    example: 507f1f77bcf86cd799439011
  */
 router.post('/async/solve', asyncQuadraticEquationRequestDto, controller.solveAsync);
+
+/**
+ * @swagger
+ * /qe/async/{taskId}:
+ *  get:
+ *      summary: Query a task by Id
+ *      parameters:
+ *        - in: path
+ *          name: taskId
+ *          type: string
+ *          required: true
+ *          description: task identifier, ObjectID
+ *          example: 507f1f77bcf86cd799439011
+ *      responses:
+ *          200:
+ *              description: Task object
+ */
+router.get('/async/:taskId', taskQueryRequestDto, controller.queryTaskById);
 
 module.exports = router;

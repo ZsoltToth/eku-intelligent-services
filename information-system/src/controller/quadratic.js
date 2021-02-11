@@ -64,3 +64,12 @@ exports.solveAsync = (req, res) => {
       res.status(500).send(err);
     });
 };
+
+exports.queryTaskById = (req, res) => {
+  if (!validationResult(req).isEmpty()) {
+    logger.error({ validationErrors: validationResult(req) });
+    res.status(400).send(validationResult(req));
+    return;
+  }
+  res.status(200).send();
+};
