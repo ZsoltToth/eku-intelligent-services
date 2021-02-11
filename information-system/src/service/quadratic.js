@@ -175,8 +175,13 @@ const solveAsync = async ({
   return taskId;
 };
 
+const queryTaskById = async (taskId) => {
+  return await Task.findById(taskId);
+};
+
 module.exports = {
   solveSync: solveSync,
   handleAsyncNotification: handleAsyncNotification,
-  solveAsync: solveAsync
+  solveAsync: solveAsync,
+  queryTaskById: queryTaskById
 };

@@ -71,5 +71,11 @@ exports.queryTaskById = (req, res) => {
     res.status(400).send(validationResult(req));
     return;
   }
-  res.status(200).send();
+  service.queryTaskById(req.params.taskId)
+    .then((task) => {
+      res.status(200).send(task);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
 };
