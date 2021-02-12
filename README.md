@@ -36,4 +36,7 @@ Technologies:
 
  ### Python
   - PyLint shall be used
+  
+# Notes / Known Issues
+ - Docker compose may cache some build steps, such as, Pipfile so --no-cache option may be necessary during build.
 
