@@ -1,18 +1,40 @@
 """Servlets to solve the quadratic equation"""
 
-
 from flask import request, Blueprint
 
 import quadratic_service
-
 
 quadratic_api = Blueprint('quadratic_api', __name__)
 
 
 @quadratic_api.route('/qe/solve', methods=['GET'])
 def quadratic():
-    """Returns the solution and the discriminant of the quadratic equation.
-     The quadratic equation described by a, b and c parameters"""
+    """
+    Returns the solution and the discriminant of the quadratic equation.
+    The quadratic equation described by a, b and c parameters
+    ---
+    parameters:
+        -   in : query
+            name : a
+            required : true,
+            schema :
+                type : int
+        -   in : query
+            name : b
+            required : true,
+            schema :
+                type : int
+        -   in : query
+            name : c
+            required : true,
+            schema :
+                type : int
+    responses:
+        200:
+            description: Hello World,
+        406:
+            description: Wrong request
+     """
     if 'a' in request.args and 'b' in request.args and 'c' in request.args:
         arg_a = request.args['a']
         arg_b = request.args['b']
@@ -32,14 +54,37 @@ def quadratic():
 
 @quadratic_api.route('/qe/async/solve', methods=['POST'])
 def async_quadratic():
-    """Returns the acceptance of the async quadratic equation solver task"""
+    """Returns the acceptance of the async quadratic equation solver task
+    ---
+    parameters:
+        -   in : body
+            required : true
+            name : body
+            schema :
+                type : object
+                properties:
+                    taskId :
+                        type : string
+                        example : 507f1f77bcf86cd799439011
+                    payload:
+                        type : array
+                        items :
+                            type : integer
+                        minItems : 3
+                        maxItems : 3
+                        example: [0,0,0]
+    responses:
+        200:
+            description: Hello World,
+        406:
+            description: Wrong request
+    """
     try:
         task_id, [coeff_a, coeff_b, coeff_c] = _parse_async_task_request_dto(request)
     except ValueError as exception:
         return {"message": str(exception)}, 406
     quadratic_service.solve_quadratic_async(task_id, coeff_a, coeff_b, coeff_c)
     return {"message": "OK"}, 200
-
 
 
 def _parse_async_task_request_dto(dto):
