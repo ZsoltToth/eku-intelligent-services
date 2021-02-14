@@ -31,9 +31,29 @@ def quadratic():
                 type : int
     responses:
         200:
-            description: Hello World,
+            description: Ok
+            content:
+                application/json:
+                    schema:
+                        type : object
+                        properties:
+                            solution:
+                                type : array
+                                items:
+                                    type : integer
+                                minItems : 0
+                                maxItems: 2
+                            discriminant:
+                                type : numeric
         406:
             description: Wrong request
+            content :
+                application/json:
+                    schema:
+                        properties:
+                            message:
+                                type: string
+                                description: the message
      """
     if 'a' in request.args and 'b' in request.args and 'c' in request.args:
         arg_a = request.args['a']
@@ -56,6 +76,13 @@ def quadratic():
 def async_quadratic():
     """Returns the acceptance of the async quadratic equation solver task
     ---
+    definitions:
+          - schema:
+              id: Message
+              properties:
+                message:
+                 type: string
+                 description: the message
     parameters:
         -   in : body
             required : true
@@ -75,9 +102,17 @@ def async_quadratic():
                         example: [0,0,0]
     responses:
         200:
-            description: Hello World,
+            description: Ok
+            content:
+                application/json:
+                    schema:
+                        $ref : '#/definitions/Message'
         406:
             description: Wrong request
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/definitions/Message"
     """
     try:
         task_id, [coeff_a, coeff_b, coeff_c] = _parse_async_task_request_dto(request)
