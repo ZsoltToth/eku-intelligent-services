@@ -5,6 +5,7 @@ Main file for server
 from flask import Flask, jsonify
 from flask_swagger import swagger
 from flask_swagger_ui import get_swaggerui_blueprint
+
 from quadraticcontroller import quadratic_api
 from generalcontroller import general_api
 import config
