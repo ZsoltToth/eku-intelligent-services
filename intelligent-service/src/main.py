@@ -23,6 +23,9 @@ if __name__ == '__main__':
 
     @app.route("/spec")
     def spec():
+        """
+        End Point for Swagger Specification
+        """
         swag = swagger(app)
         swag['info']['version'] = "1.0"
         swag['info']['title'] = "API of Intelligent Service"

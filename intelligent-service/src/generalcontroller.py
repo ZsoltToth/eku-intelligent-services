@@ -16,4 +16,3 @@ def hello():
         description: Hello World
     """
     return "Hello"
-
