@@ -44,6 +44,11 @@ configuration.
 ```bash
 docker run --rm -v /home/zsolt/git/eku-intelligent-services/intelligent-service/src:/data --env CI=true cytopia/pylint /data
 ```
+
+The github action use threshold 8 which is considered student friendly. 
+Production ready code use 9.0-9.5 threshold as you can read it
+[here](https://medium.com/analytics-vidhya/pylint-static-code-analysis-github-action-to-fail-below-a-score-threshold-58a124aafaa0).
+
   
 # Notes / Known Issues
  - Docker compose may cache some build steps, such as, Pipfile so --no-cache option may be necessary during build.
