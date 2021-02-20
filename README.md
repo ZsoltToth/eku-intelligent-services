@@ -36,6 +36,14 @@ Technologies:
 
  ### Python
   - PyLint shall be used
+
+You can run pylint in Docker with the following command.
+The Intelligent Service Quality Gate run the same command with some other
+configuration.
+
+```bash
+docker run --rm -v /home/zsolt/git/eku-intelligent-services/intelligent-service/src:/data --env CI=true cytopia/pylint /data
+```
   
 # Notes / Known Issues
  - Docker compose may cache some build steps, such as, Pipfile so --no-cache option may be necessary during build.
