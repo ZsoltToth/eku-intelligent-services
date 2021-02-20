@@ -16,3 +16,4 @@ jobs:
       uses: ./.github/actions/docker-pylint
       with:
        src-path: './intelligent-service/src' 
+       min-score: 9.9
