@@ -1,0 +1,18 @@
+name: Intelligent Service Quality Gate
+
+on:
+  push:
+    branches:
+      - '*'
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Check Python Style with pylint
+      uses: actions/docker-pylint@v1
+      with:
+       src-path: './intelligent-service/src' 

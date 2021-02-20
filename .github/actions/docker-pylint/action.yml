@@ -1,0 +1,19 @@
+# action.yml
+name: 'Running Pylint in Docker'
+description: 'Run Pylint using cytopia/pylint Docker image on given directory'
+inputs:
+  src-path: #Path to the Source Root
+    description: 'Path to the Source Root'
+    required: true
+    default: '.'
+#outputs:
+#  time: # id of output
+#    description: 'The time we greeted you'
+runs:
+  using: 'docker'
+  image: 'cytopia/pylint'
+  args:
+    - '--rm'
+    - '--volume .'
+    - cytopia/pylint
+    - ${{ inputs.src-path }}
