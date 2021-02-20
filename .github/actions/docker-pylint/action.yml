@@ -13,4 +13,5 @@ runs:
   using: 'docker'
   image: 'cytopia/pylint'
   args:
+    - '--disable=import-error
     - ${{ inputs.src-path }}
