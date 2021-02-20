@@ -6,6 +6,10 @@ inputs:
     description: 'Path to the Source Root'
     required: true
     default: '.'
+  min-score: #Minimum score for Pylint
+    description: 'Minimum Score for Pylint used for --fail-under option'
+    required: false
+    default: 8
 #outputs:
 #  time: # id of output
 #    description: 'The time we greeted you'
@@ -14,4 +18,5 @@ runs:
   image: 'cytopia/pylint'
   args:
     - --disable=import-error
+    - --fail-under=${{ inputs.min-score }}
     - ${{ inputs.src-path }}
