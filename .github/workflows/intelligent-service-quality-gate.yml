@@ -16,4 +16,6 @@ jobs:
       uses: ./.github/actions/docker-pylint
       with:
        src-path: './intelligent-service/src' 
-       min-score: 9.5
+#       min-score: 9.5 # default threshold is 8 for this action
+#       production ready code should have 9-9.5 threshold
+#       default threshold is student friendly
