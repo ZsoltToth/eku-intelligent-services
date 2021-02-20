@@ -13,6 +13,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Check Python Style with pylint
-      uses: ./github/actions/docker-pylint@v1
+      uses: ./.github/actions/docker-pylint@v1
       with:
        src-path: './intelligent-service/src' 
