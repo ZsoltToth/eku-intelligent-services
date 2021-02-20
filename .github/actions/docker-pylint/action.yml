@@ -13,7 +13,4 @@ runs:
   using: 'docker'
   image: 'cytopia/pylint'
   args:
-    - '--rm'
-    - '--volume .'
-    - cytopia/pylint
     - ${{ inputs.src-path }}
